@@ -5,11 +5,15 @@ import Hero from './components/Hero';
 import About from './components/About';
 import Services from './components/Services';
 import Gallery from './components/Gallery';
+import RecentWorks from './components/RecentWorks';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import SearchResults from './components/SearchResults';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -17,6 +21,16 @@ function App() {
     }, 2500);
     return () => clearTimeout(timer);
   }, []);
+
+  const handleSearch = (query) => {
+    setSearchQuery(query);
+    setShowSearchResults(true);
+  };
+
+  const closeSearch = () => {
+    setShowSearchResults(false);
+    setSearchQuery('');
+  };
 
   return (
     <div className="min-h-screen bg-[#0a0908] text-stone-100 overflow-x-hidden">
@@ -81,15 +95,21 @@ function App() {
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <Navbar />
+            <Navbar onSearch={handleSearch} />
             <main>
               <Hero />
               <About />
               <Services />
               <Gallery />
+              <RecentWorks />
               <Contact />
             </main>
             <Footer />
+            <AnimatePresence>
+              {showSearchResults && (
+                <SearchResults searchQuery={searchQuery} onClose={closeSearch} />
+              )}
+            </AnimatePresence>
           </motion.div>
         )}
       </AnimatePresence>

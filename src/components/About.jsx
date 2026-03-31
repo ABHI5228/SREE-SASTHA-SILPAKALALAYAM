@@ -108,7 +108,7 @@ const About = () => {
                 transition={{ duration: 3, repeat: Infinity }}
                 className="absolute -bottom-4 sm:-bottom-6 -right-4 sm:-right-6 bg-stone-900 border border-gold/30 rounded p-3 sm:p-4 shadow-xl"
               >
-                <div className="text-2xl sm:text-3xl font-bold text-gold-gradient">25+</div>
+                <div className="text-2xl sm:text-3xl font-bold text-gold-gradient">50+</div>
                 <div className="text-xs sm:text-sm text-stone-400">Years of Excellence</div>
               </motion.div>
             </div>

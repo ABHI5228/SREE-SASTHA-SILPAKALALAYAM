@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaPhone, FaBars, FaTimes, FaSearch, FaGem } from 'react-icons/fa';
 
-const Navbar = () => {
+const Navbar = ({ onSearch }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -16,11 +16,19 @@ const Navbar = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim() && onSearch) {
+      onSearch(searchQuery.trim());
+    }
+  };
+
   const navLinks = [
     { name: 'Home', href: '#home' },
     { name: 'About', href: '#about' },
     { name: 'Services', href: '#services' },
     { name: 'Gallery', href: '#gallery' },
+    { name: 'Recent Works', href: '#recent-works' },
     { name: 'Contact', href: '#contact' },
   ];
 
@@ -28,7 +36,7 @@ const Navbar = () => {
     e.preventDefault();
     if (searchQuery.trim()) {
       const searchTerm = searchQuery.toLowerCase().trim();
-      const sections = ['home', 'about', 'services', 'gallery', 'contact'];
+      const sections = ['home', 'about', 'services', 'gallery', 'recent-works', 'contact'];
       
       // Keywords to search for
       const keywords = {
@@ -36,6 +44,7 @@ const Navbar = () => {
         'about': ['about', 'history', 'craftsmen', 'artisan', 'quality', 'experience', 'legacy'],
         'services': ['services', 'temple', 'idol', 'pillar', 'name board', 'custom', 'architectural', 'restoration', 'granite', 'marble'],
         'gallery': ['gallery', 'photo', 'image', 'work', 'project'],
+        'recent-works': ['recent', 'completed', 'latest', 'new'],
         'contact': ['contact', 'phone', 'call', 'whatsapp', 'location', 'ottapalam', 'kerala']
       };
 
@@ -84,34 +93,34 @@ const Navbar = () => {
           : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+        <div className="flex items-center justify-between h-16 sm:h-18">
           {/* Logo */}
           <motion.a
             href="#home"
-            className="flex items-center space-x-4 group"
+            className="flex items-center space-x-2 sm:space-x-3 group"
             whileHover={{ scale: 1.02 }}
           >
             <div className="relative">
-              <div className="w-12 h-12 rounded bg-gradient-to-br from-gold via-gold-dark to-bronze flex items-center justify-center shadow-lg shadow-gold/20">
-                <span className="font-serif text-2xl font-bold text-[#0a0908]">श्री</span>
+              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded bg-gradient-to-br from-gold via-gold-dark to-bronze flex items-center justify-center shadow-lg shadow-gold/20">
+                <span className="font-serif text-xl sm:text-2xl font-bold text-[#0a0908]">श्री</span>
               </div>
               <div className="absolute inset-0 rounded bg-gold/30 animate-pulse" style={{ animationDuration: '2s' }} />
-              <div className="absolute -top-1 -right-1 w-2 h-2 bg-gold rounded-full opacity-60" />
-              <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gold rounded-full opacity-60" />
+              <div className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 bg-gold rounded-full opacity-60" />
+              <div className="absolute -bottom-0.5 -left-0.5 w-1.5 h-1.5 bg-gold rounded-full opacity-60" />
             </div>
             <div className="hidden sm:block">
-              <h1 className="heading-display text-lg text-stone-100 leading-tight group-hover:text-gold transition-colors">
+              <h1 className="heading-display text-base sm:text-lg text-stone-100 leading-tight group-hover:text-gold transition-colors">
                 SREE SASTHA
               </h1>
-              <p className="text-[10px] text-gold tracking-[0.2em] uppercase">
+              <p className="text-[8px] sm:text-[10px] text-gold tracking-[0.15em] sm:tracking-[0.2em] uppercase">
                 Silpakalalayam
               </p>
             </div>
           </motion.a>
 
           {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center space-x-1">
+          <div className="hidden lg:flex items-center space-x-0.5">
             {navLinks.map((link, index) => (
               <motion.a
                 key={link.name}
@@ -119,16 +128,16 @@ const Navbar = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
-                className="relative px-5 py-2 text-sm text-stone-300 hover:text-gold transition-colors duration-300 tracking-wider uppercase font-light group"
+                className="relative px-3 py-2 text-xs sm:text-sm text-stone-300 hover:text-gold transition-colors duration-300 tracking-wider uppercase font-light group"
               >
                 {link.name}
-                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-gold rotate-45 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-gold rotate-45 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.a>
             ))}
           </div>
 
           {/* Right Side - Search & CTA */}
-          <div className="hidden lg:flex items-center space-x-4">
+          <div className="hidden lg:flex items-center space-x-2">
             {/* Search Bar */}
             <AnimatePresence>
               {isSearchOpen ? (
@@ -136,14 +145,14 @@ const Navbar = () => {
                   initial={{ width: 0, opacity: 0 }}
                   animate={{ width: 'auto', opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
-                  onSubmit={handleSearch}
+                  onSubmit={handleSearchSubmit}
                   className="relative flex items-center"
                 >
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search services..."
+                    placeholder="Search products..."
                     className="w-48 px-4 py-2 bg-stone-900/80 border border-gold/30 text-sm text-stone-200 placeholder-stone-500 focus:outline-none focus:border-gold"
                     autoFocus
                   />

@@ -71,7 +71,7 @@ const Contact = () => {
       icon: FaMapMarkerAlt,
       title: 'Location',
       details: 'Meetna Centre, Ottapalam, Kerala',
-      link: 'https://maps.google.com/?q=Ottapalam,Kerala',
+      link: 'https://maps.app.goo.gl/bvxfjiuCadWE5XVG8'
     },
     {
       icon: FaClock,
@@ -260,13 +260,11 @@ const Contact = () => {
                   />
                 </div>
 
-                <button
-                  type="button"
-                  disabled={isSubmitting}
-                  onClick={handleSubmit}
-                  className={`btn-luxury w-full justify-center text-sm sm:text-base cursor-pointer ${
-                    submitted ? '!bg-green-500' : ''
-                  }`}
+                <a
+                  href={`https://wa.me/919744694839?text=${encodeURIComponent(formData.name && formData.phone && formData.message ? `Hello, I'm ${formData.name}. ${formData.message} Contact: ${formData.phone}` : 'Hello, I would like to inquire about your stone carving services')}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="btn-luxury w-full justify-center text-sm sm:text-base cursor-pointer flex items-center"
                 >
                   {submitted ? (
                     <>
@@ -284,7 +282,7 @@ const Contact = () => {
                       Send via WhatsApp
                     </>
                   )}
-                </button>
+                </a>
 
                 <p className="text-[10px] sm:text-xs text-stone-500 text-center">
                   Your message will be sent via WhatsApp for quick response

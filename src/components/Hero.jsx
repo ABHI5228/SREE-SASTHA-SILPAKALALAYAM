@@ -284,8 +284,8 @@ const Hero = () => {
               className="grid grid-cols-3 gap-4 sm:gap-8 pt-6 sm:pt-8 border-t border-gold/20"
             >
               {[
-                { number: '25+', label: 'Years', icon: FaAward },
-                { number: '500+', label: 'Projects', icon: FaGem },
+                { number: '50+', label: 'Years', icon: FaAward },
+                { number: '1000+', label: 'Projects', icon: FaGem },
                 { number: '100%', label: 'Happy', icon: FaUsers },
               ].map((stat, index) => (
                 <motion.div
