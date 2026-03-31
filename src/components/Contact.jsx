@@ -7,6 +7,7 @@ import {
   FaClock,
   FaPaperPlane,
   FaWhatsapp,
+  FaCheck,
 } from 'react-icons/fa';
 
 const Contact = () => {
@@ -17,12 +18,39 @@ const Contact = () => {
     phone: '',
     message: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = () => {
+    console.log('handleSubmit called');
+    console.log('Form data:', formData);
+    
+    // Validate form data
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.message.trim()) {
+      alert('Please fill in all fields');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    
+    // Create WhatsApp message
     const whatsappMessage = `Hello, I'm ${formData.name}. ${formData.message} Contact: ${formData.phone}`;
     const whatsappUrl = `https://wa.me/919744694839?text=${encodeURIComponent(whatsappMessage)}`;
-    window.open(whatsappUrl, '_blank');
+    
+    console.log('WhatsApp URL:', whatsappUrl);
+    
+    // Open WhatsApp in new window
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+    
+    // Show success state
+    setTimeout(() => {
+      setIsSubmitting(false);
+      setSubmitted(true);
+      setFormData({ name: '', phone: '', message: '' });
+      
+      // Reset submitted state after 3 seconds
+      setTimeout(() => setSubmitted(false), 3000);
+    }, 500);
   };
 
   const handleChange = (e) => {
@@ -165,7 +193,7 @@ const Contact = () => {
                   <FaMapMarkerAlt className="text-3xl sm:text-4xl text-gold mx-auto mb-2 sm:mb-3" />
                   <p className="text-stone-400 text-sm sm:text-base">Ottapalam, Kerala</p>
                   <a
-                    href="https://maps.app.goo.gl/g44dATADUKuimZ7dA"
+                    href="https://maps.google.com/?q=Ottapalam,Kerala"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-gold text-xs sm:text-sm hover:underline mt-2 inline-block"
@@ -186,7 +214,7 @@ const Contact = () => {
             <div className="card-luxury p-4 sm:p-6">
               <h3 className="heading-display text-lg sm:text-xl text-stone-200 mb-4 sm:mb-6">Send us a Message</h3>
 
-              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-xs sm:text-sm font-medium text-stone-400 mb-1.5 sm:mb-2">
                     Your Name
@@ -197,7 +225,6 @@ const Contact = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    required
                     className="input-luxury text-sm sm:text-base"
                     placeholder="Enter your name"
                   />
@@ -213,7 +240,6 @@ const Contact = () => {
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
-                    required
                     className="input-luxury text-sm sm:text-base"
                     placeholder="Enter your phone number"
                   />
@@ -228,27 +254,42 @@ const Contact = () => {
                     name="message"
                     value={formData.message}
                     onChange={handleChange}
-                    required
                     rows={4}
                     className="input-luxury resize-none text-sm sm:text-base"
                     placeholder="Tell us about your project requirements..."
                   />
                 </div>
 
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  className="btn-luxury w-full justify-center text-sm sm:text-base"
+                <button
+                  type="button"
+                  disabled={isSubmitting}
+                  onClick={handleSubmit}
+                  className={`btn-luxury w-full justify-center text-sm sm:text-base cursor-pointer ${
+                    submitted ? '!bg-green-500' : ''
+                  }`}
                 >
-                  <FaPaperPlane className="mr-2" />
-                  Send via WhatsApp
-                </motion.button>
+                  {submitted ? (
+                    <>
+                      <FaCheck className="mr-2" />
+                      Message Sent!
+                    </>
+                  ) : isSubmitting ? (
+                    <>
+                      <span className="loader mr-2" style={{ width: '16px', height: '16px', borderWidth: '2px' }} />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <FaPaperPlane className="mr-2" />
+                      Send via WhatsApp
+                    </>
+                  )}
+                </button>
 
                 <p className="text-[10px] sm:text-xs text-stone-500 text-center">
                   Your message will be sent via WhatsApp for quick response
                 </p>
-              </form>
+              </div>
             </div>
           </motion.div>
         </div>

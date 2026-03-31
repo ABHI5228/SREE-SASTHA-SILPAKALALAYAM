@@ -27,21 +27,47 @@ const Navbar = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // Search through all text content on the page
-      const searchTerm = searchQuery.toLowerCase();
+      const searchTerm = searchQuery.toLowerCase().trim();
       const sections = ['home', 'about', 'services', 'gallery', 'contact'];
       
-      // Find matching section
+      // Keywords to search for
+      const keywords = {
+        'home': ['home', 'sree', 'sastha', 'stone', 'carving', 'temple', 'traditional'],
+        'about': ['about', 'history', 'craftsmen', 'artisan', 'quality', 'experience', 'legacy'],
+        'services': ['services', 'temple', 'idol', 'pillar', 'name board', 'custom', 'architectural', 'restoration', 'granite', 'marble'],
+        'gallery': ['gallery', 'photo', 'image', 'work', 'project'],
+        'contact': ['contact', 'phone', 'call', 'whatsapp', 'location', 'ottapalam', 'kerala']
+      };
+
+      let found = false;
+      
+      // Check each section for matching keywords
       for (const section of sections) {
-        const element = document.getElementById(section);
-        if (element) {
-          const text = element.textContent.toLowerCase();
-          if (text.includes(searchTerm)) {
+        const sectionKeywords = keywords[section] || [];
+        if (searchTerm.includes(section) || sectionKeywords.some(kw => searchTerm.includes(kw))) {
+          const element = document.getElementById(section);
+          if (element) {
             element.scrollIntoView({ behavior: 'smooth' });
+            found = true;
             break;
           }
         }
       }
+
+      // If no keyword match, search in text content
+      if (!found) {
+        for (const section of sections) {
+          const element = document.getElementById(section);
+          if (element) {
+            const text = element.textContent.toLowerCase();
+            if (text.includes(searchTerm)) {
+              element.scrollIntoView({ behavior: 'smooth' });
+              break;
+            }
+          }
+        }
+      }
+      
       setSearchQuery('');
       setIsSearchOpen(false);
     }
@@ -71,7 +97,6 @@ const Navbar = () => {
                 <span className="font-serif text-2xl font-bold text-[#0a0908]">श्री</span>
               </div>
               <div className="absolute inset-0 rounded bg-gold/30 animate-pulse" style={{ animationDuration: '2s' }} />
-              {/* Decorative dots around logo */}
               <div className="absolute -top-1 -right-1 w-2 h-2 bg-gold rounded-full opacity-60" />
               <div className="absolute -bottom-1 -left-1 w-2 h-2 bg-gold rounded-full opacity-60" />
             </div>
@@ -97,7 +122,6 @@ const Navbar = () => {
                 className="relative px-5 py-2 text-sm text-stone-300 hover:text-gold transition-colors duration-300 tracking-wider uppercase font-light group"
               >
                 {link.name}
-                {/* Diamond indicator on hover */}
                 <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-gold rotate-45 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
               </motion.a>
             ))}
@@ -113,7 +137,7 @@ const Navbar = () => {
                   animate={{ width: 'auto', opacity: 1 }}
                   exit={{ width: 0, opacity: 0 }}
                   onSubmit={handleSearch}
-                  className="relative"
+                  className="relative flex items-center"
                 >
                   <input
                     type="text"
@@ -124,9 +148,18 @@ const Navbar = () => {
                     autoFocus
                   />
                   <button
+                    type="submit"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 p-1 text-gold hover:text-gold-light"
+                  >
+                    <FaSearch size={14} />
+                  </button>
+                  <button
                     type="button"
-                    onClick={() => setIsSearchOpen(false)}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-stone-500 hover:text-gold"
+                    onClick={() => {
+                      setIsSearchOpen(false);
+                      setSearchQuery('');
+                    }}
+                    className="absolute right-10 top-1/2 -translate-y-1/2 text-stone-500 hover:text-gold"
                   >
                     <FaTimes size={14} />
                   </button>
@@ -189,13 +222,21 @@ const Navbar = () => {
               onSubmit={handleSearch}
               className="lg:hidden pb-4"
             >
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search services, gallery..."
-                className="w-full px-4 py-3 bg-stone-900/80 border border-gold/30 text-stone-200 placeholder-stone-500 focus:outline-none focus:border-gold"
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search services, gallery..."
+                  className="flex-1 px-4 py-3 bg-stone-900/80 border border-gold/30 text-stone-200 placeholder-stone-500 focus:outline-none focus:border-gold"
+                />
+                <button
+                  type="submit"
+                  className="p-3 text-gold hover:text-gold-light"
+                >
+                  <FaSearch size={18} />
+                </button>
+              </div>
             </motion.form>
           )}
         </AnimatePresence>
